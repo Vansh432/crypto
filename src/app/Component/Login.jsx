@@ -86,7 +86,7 @@ const Login = (props) => {
             {loading ? 'Logging In...' : 'Login'} {/* Change button text based on loading state */}
           </button>
           <p className="text-sm text-center text-gray-500 mt-4">
-            Don't have an account?{' '}
+            Don&lsquo; have an account?{' '}
             <button onClick={setScreenLogin} className="text-blue-500 hover:underline">
               Sign up
             </button>
