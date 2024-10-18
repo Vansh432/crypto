@@ -17,6 +17,8 @@ export default function App() {
   const URL2 = `https://rest.coinapi.io/v1/exchanges/icons/32?apikey=${ApiKey}`; // routes of coinAPI icon
 
   useEffect(() => {
+
+    //get data from api endpoint
     async function getData() {
       const [response1, response2] = await Promise.all([axios.get(URL1), axios.get(URL2)]);
       const exchanges = response1.data;
@@ -38,11 +40,12 @@ export default function App() {
     getData();
   }, []);
 
+  //this useEffect call the when user enter the input and search crypto exchange
   useEffect(() => {
     const filterArr = exchangesName.filter((element) => {
       const volumeString = element.volume_1day_usd.toString(); // Convert volume to string for comparison
-      return element.name.toLowerCase().startsWith(value.toLowerCase()) || 
-             volumeString.startsWith(value); // Filter by name or volume
+      return element.name.toLowerCase().startsWith(value.toLowerCase()) ||
+        volumeString.startsWith(value); // Filter by name or volume
     });
 
     setCurrentPage(1); // Reset to the first page when filtering
@@ -73,10 +76,10 @@ export default function App() {
       <Navbar />
       <div className="relative flex m-auto mt-[50px] w-[30%] max-sm:w-[90%]">
         <FaBuilding className="absolute left-[15px] text-[1.2rem] top-[32%]" />
-        <input 
-          type="text" 
-          placeholder="Search by name or volume" 
-          className="h-[50px] w-[100%] border-2 pl-[40px] focus:outline-[#0083ff] border-[#0083ff] rounded-[40px]" 
+        <input
+          type="text"
+          placeholder="Search by name or volume"
+          className="h-[50px] w-[100%] border-2 pl-[40px] focus:outline-[#0083ff] border-[#0083ff] rounded-[40px]"
           onChange={(e) => setValue(e.target.value)} // Update value on input change
         />
         <FaSearch className="absolute right-[20px] text-[1.2rem] top-[37%]" />

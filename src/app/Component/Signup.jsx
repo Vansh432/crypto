@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { authContext } from '../Context/auth';
 
 const Signup = (props) => {
+  //useState handle input data and controls
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ const Signup = (props) => {
   const [error, setError] = useState('');
   const { setSignup } = props;
 
-  const contextAuth=useContext(authContext);
+  const contextAuth = useContext(authContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

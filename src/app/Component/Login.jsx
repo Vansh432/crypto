@@ -6,36 +6,38 @@ import { useContext } from 'react';
 import { authContext } from '../Context/auth';
 
 const Login = (props) => {
+  //useState handle input data and controls
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setLogin } = props; // Assuming setLogin is a prop for toggling the login state
   const [error, setError] = useState(''); // State to handle error messages
   const [loading, setLoading] = useState(false); // State to handle loading state
 
-  const contextAuth=useContext(authContext);
+  const contextAuth = useContext(authContext);
 
   const handleSubmit = async (e) => {
-    
+
     e.preventDefault(); // Prevent default form submission
     setError(''); // Clear previous error messages
     setLoading(true); // Set loading state to true
-    try{
-      const response=await axios.post('/api/login',{
+    try {
+      const response = await axios.post('/api/login', {
         email,
         password
       });
-      
-      if(response.status === 200){
-        localStorage.setItem('token',response.data.token); // Store the token in local storage
+
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token); // Store the token in local storage
         console.log(localStorage.getItem('token'));
         contextAuth.setAuth(true);
       }
 
-    }catch(e){
+    } catch (e) {
       console.error(e);
       setError('Failed to login. Please check your credentials.'); // Display error message
     }
-    
+
   };
 
   function setScreenLogin() {

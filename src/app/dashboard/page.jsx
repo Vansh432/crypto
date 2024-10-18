@@ -5,22 +5,23 @@ import Signup from '../Component/Signup';
 import { useContext } from 'react';
 import { authContext } from '../Context/auth';
 export default function Home() {
-  const [isLogin,setLoginSignup]=useState(true);
-  
-  const contextAuth=useContext(authContext);
-  
-useEffect(()=>{
-  let token=localStorage.getItem('token');
-  console.log(contextAuth);
-  console.log(token);
-  if(token!==null){
-    contextAuth.setAuth(true);
-  }
-})
+  // show the login and signup screen
+  const [isLogin, setLoginSignup] = useState(true);
+
+  const contextAuth = useContext(authContext);
+
+  useEffect(() => {
+    let token = localStorage.getItem('token');
+    console.log(contextAuth);
+    console.log(token);
+    if (token !== null) {
+      contextAuth.setAuth(true);
+    }
+  })
   //set Login and signup  screen 
-  function setScreen(){
+  function setScreen() {
     setLoginSignup(!isLogin);
- 
+
   }
   return (
     <div className="h-screen flex">
@@ -50,9 +51,9 @@ useEffect(()=>{
 
         {/* Login Form */}
         <div>
-        {contextAuth.isAuth?<h1 className='text-3xl font-bold'>You are in Dashboard</h1>:isLogin?<Login setLogin={setScreen}/>:<Signup setSignup={setScreen}/>}
-        
-          </div>
+          {contextAuth.isAuth ? <h1 className='text-3xl font-bold'>You are in Dashboard</h1> : !isLogin ? <Login setLogin={setScreen} /> : <Signup setSignup={setScreen} />}
+
+        </div>
       </div>
     </div>
   );
