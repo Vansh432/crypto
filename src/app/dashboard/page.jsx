@@ -12,8 +12,6 @@ export default function Home() {
 
   useEffect(() => {
     let token = localStorage.getItem('token');
-    console.log(contextAuth);
-    console.log(token);
     if (token !== null) {
       contextAuth.setAuth(true);
     }

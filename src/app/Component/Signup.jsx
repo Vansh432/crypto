@@ -28,6 +28,8 @@ const Signup = (props) => {
         email,
         password,
       });
+      
+      console.log(response.data);
 
 
       if (response.status === 200) {
@@ -44,7 +46,7 @@ const Signup = (props) => {
 
     } catch (err) {
       console.error(err);
-      setError('Failed to signup. Please try again.'); // Handle any error during signup
+      setError(err.response.data.message); // Handle any error during signup
     } finally {
       setLoading(false); // Reset loading state
     }

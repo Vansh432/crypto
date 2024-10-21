@@ -8,6 +8,8 @@ export default function App() {
   const [exchangesName, setExchangeName] = useState([]);
   const [exchangeItemsLimit, setExchangeItemsLimit] = useState([]);
   const [value, setValue] = useState('');
+  const [minVolume, setMinVolume] = useState(''); // State for min volume
+  const [maxVolume, setMaxVolume] = useState(''); // State for max volume
   const [currentPage, setCurrentPage] = useState(1); // Track current page
   const itemsPerPage = 10; // Items per page
   const pagesToShow = 3; // Number of page numbers to show
@@ -23,7 +25,7 @@ export default function App() {
       const [response1, response2] = await Promise.all([axios.get(URL1), axios.get(URL2)]);
       const exchanges = response1.data;
       const iconexchange = response2.data;
-
+     console.log(response1);
       const mergeArray = exchanges.map(element => {
         const icon = iconexchange.find(icon => icon.exchange_id === element.exchange_id);
         return {
@@ -32,7 +34,7 @@ export default function App() {
           volume_1day_usd: element.volume_1day_usd
         };
       });
-
+      
       setExchangeName(mergeArray);
       setExchangeItemsLimit(mergeArray);
     }
@@ -40,17 +42,23 @@ export default function App() {
     getData();
   }, []);
 
-  //this useEffect call the when user enter the input and search crypto exchange
+  // Apply search and volume range filters
   useEffect(() => {
     const filterArr = exchangesName.filter((element) => {
-      const volumeString = element.volume_1day_usd.toString(); // Convert volume to string for comparison
-      return element.name.toLowerCase().startsWith(value.toLowerCase()) ||
-        volumeString.startsWith(value); // Filter by name or volume
+      const volume = element.volume_1day_usd;
+      const volumeString = volume.toString(); // Convert volume to string for comparison
+
+      // Apply both search and volume range filters
+      return (
+        (element.name.toLowerCase().startsWith(value.toLowerCase()) || volumeString.startsWith(value)) &&
+        (!minVolume || volume >= parseFloat(minVolume)) &&
+        (!maxVolume || volume <= parseFloat(maxVolume))
+      );
     });
 
     setCurrentPage(1); // Reset to the first page when filtering
     setExchangeItemsLimit(filterArr);
-  }, [value]);
+  }, [value, minVolume, maxVolume]);
 
   const totalPages = Math.ceil(exchangeItemsLimit.length / itemsPerPage); // Total pages
   const currentItems = exchangeItemsLimit.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); // Items for current page
@@ -84,6 +92,27 @@ export default function App() {
         />
         <FaSearch className="absolute right-[20px] text-[1.2rem] top-[37%]" />
       </div>
+
+      {/* Volume range filter inputs */}
+      <div className="flex justify-center mt-[20px]">
+        <div className="flex gap-4">
+          <input
+            type="number"
+            placeholder="Min volume"
+            value={minVolume}
+            onChange={(e) => setMinVolume(e.target.value)}
+            className="h-[40px] border-2 border-[#0083ff] rounded-[10px] p-2"
+          />
+          <input
+            type="number"
+            placeholder="Max volume"
+            value={maxVolume}
+            onChange={(e) => setMaxVolume(e.target.value)}
+            className="h-[40px] border-2 border-[#0083ff] rounded-[10px] p-2"
+          />
+        </div>
+      </div>
+
       <div className="mt-[50px]">
         <div className="flex border-b-2 justify-evenly max-sm:justify-between px-[10px]">
           <h2 className="font-bold">EXCHANGES</h2>
@@ -106,7 +135,7 @@ export default function App() {
           <button
             onClick={handlePreviousClick}
             disabled={currentPage === 1}
-            className={`flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border rounded-full hover:bg-blue-50 transition duration-[0.4s] hover:border-[#3B82F6] border-[2px]`}
+            className="flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border rounded-full hover:bg-blue-50 transition duration-[0.4s] hover:border-[#3B82F6] border-[2px]"
           >
             &lt; Previous
           </button>
@@ -124,7 +153,7 @@ export default function App() {
           <button
             onClick={handleNextClick}
             disabled={currentPage === totalPages}
-            className={`flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border rounded-full hover:bg-blue-50 transition duration-[0.4s] hover:border-[#3B82F6] border-[2px]`}
+            className="flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border rounded-full hover:bg-blue-50 transition duration-[0.4s] hover:border-[#3B82F6] border-[2px]"
           >
             Next &gt;
           </button>

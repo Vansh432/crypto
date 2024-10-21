@@ -12,7 +12,7 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const { setLogin } = props; // Assuming setLogin is a prop for toggling the login state
   const [error, setError] = useState(''); // State to handle error messages
-  const [loading, setLoading] = useState(false); // State to handle loading state
+  
 
   const contextAuth = useContext(authContext);
 
@@ -20,22 +20,21 @@ const Login = (props) => {
 
     e.preventDefault(); // Prevent default form submission
     setError(''); // Clear previous error messages
-    setLoading(true); // Set loading state to true
+
     try {
       const response = await axios.post('/api/login', {
         email,
         password
       });
-
+      
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token); // Store the token in local storage
-        console.log(localStorage.getItem('token'));
         contextAuth.setAuth(true);
       }
 
     } catch (e) {
-      console.error(e);
-      setError('Failed to login. Please check your credentials.'); // Display error message
+    
+      setError(e.response.data.error); // Display error message
     }
 
   };
@@ -82,10 +81,10 @@ const Login = (props) => {
           </div>
           <button
             type="submit"
-            className={`w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={loading} // Disable button during loading
+            className={`w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 `}
+         
           >
-            {loading ? 'Logging In...' : 'Login'} {/* Change button text based on loading state */}
+            {'Login'} {/* Change button text based on loading state */}
           </button>
           <p className="text-sm text-center text-gray-500 mt-4">
             Don&lsquo; have an account?{' '}
